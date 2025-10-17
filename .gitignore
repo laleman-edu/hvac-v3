@@ -1,0 +1,8 @@
+# Local development ignores
+__pycache__/
+.vscode/
+node_modules/
+_local_notes/
+_temp/
+_*.md
+*.tmp
