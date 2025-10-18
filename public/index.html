@@ -50,6 +50,23 @@
           <p id="formStatus" role="status" aria-live="polite"></p>
         </form>
       </section>
+      <!-- Change note: Added placeholder auth controls to demo email/password flows for MVP. -->
+      <section class="card">
+        <h2>Account Access</h2>
+        <form id="loginForm">
+          <label>
+            Email
+            <input type="email" name="email" placeholder="admin@example.com" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="••••••••" required />
+          </label>
+          <button type="submit">Login</button>
+        </form>
+        <button id="logoutButton" type="button">Logout</button>
+        <p id="authStatus">Not signed in</p>
+      </section>
       <section class="card">
         <h2>Next Steps</h2>
         <ol>
@@ -60,6 +77,13 @@
         <p class="hint">
           Admin dashboard and reporting ship in later MVP milestones.
         </p>
+      </section>
+      <!-- Change note: Added service type display list to verify Firestore reads. -->
+      <section class="card">
+        <h2>Service Catalog</h2>
+        <ul id="serviceTypesList">
+          <li>Loading service catalog...</li>
+        </ul>
       </section>
     </main>
     <footer>
