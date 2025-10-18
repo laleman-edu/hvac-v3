@@ -18,3 +18,6 @@ It provides end-to-end functionality from **service request** → **appointment 
 | `README.md` | 🔧 To create (in `/hvac/`) | Use the content above |
 | `hvac-v3.1-mvp-requirements.md` | ✅ Ready | Guides your Firebase MVP build |
 | `hvac-v4-full-scope-foundation.md` | ✅ Ready | Serves as long-term blueprint |
+
+## Version History & File Movements
+- 2025-10-18: Added Firebase MVP scaffold including `public/index.html`, `public/styles.css`, `public/app.js`, Functions boilerplate (`functions/index.js`, `functions/package.json`), root configs (`firebase.json`, `.firebaserc`), and updated `.gitignore` for Firebase artifacts.

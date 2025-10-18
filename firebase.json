@@ -1,0 +1,14 @@
+{
+  "_comment": "Change note: Configured Firebase Hosting public directory and Functions source for MVP scaffold.",
+  "functions": {
+    "source": "functions"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

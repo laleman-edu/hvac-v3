@@ -1,0 +1,6 @@
+{
+  "_comment": "Change note: Added placeholder Firebase project alias for local development setup.",
+  "projects": {
+    "default": "hvac-v3-placeholder"
+  }
+}

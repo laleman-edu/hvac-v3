@@ -1,0 +1,19 @@
+{
+  "_comment": "Change note: Declared Firebase Functions dependencies required for MVP notification stubs.",
+  "name": "hvac-functions",
+  "description": "Firebase Functions for HVAC MVP notifications and invoicing.",
+  "version": "0.0.1",
+  "engines": {
+    "node": "18"
+  },
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.11.1",
+    "firebase-functions": "^4.5.0"
+  }
+}
