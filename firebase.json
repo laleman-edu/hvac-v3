@@ -1,14 +1,20 @@
 {
-  "_comment": "Change note: Configured Firebase Hosting public directory and Functions source for MVP scaffold.",
   "functions": {
     "source": "functions"
   },
   "hosting": {
+    "site": "hvac-v3",
     "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
