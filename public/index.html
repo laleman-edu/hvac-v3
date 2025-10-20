@@ -5,9 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HVAC Service Management</title>
     <link rel="stylesheet" href="styles.css" />
-    <script defer type="module" src="app.js"></script>
+    <script defer type="module" src="/app.js"></script>
   </head>
   <body>
+
+    <section id="auth-section">
+      <h2>Customer Login</h2>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button id="btn-login">Login</button>
+      <button id="btn-signup">Create Account</button>
+      <button id="btn-logout" style="display:none;">Logout</button>
+    </section>
+
+
     <!-- Change note: Scaffolded responsive landing page with service request form for MVP validation. -->
     <header class="hero">
       <h1>Reliable HVAC Services</h1>
@@ -49,6 +60,10 @@
           <button type="submit">Submit Request</button>
           <p id="formStatus" role="status" aria-live="polite"></p>
         </form>
+
+
+
+
       </section>
       <!-- Change note: Added placeholder auth controls to demo email/password flows for MVP. -->
       <section class="card">

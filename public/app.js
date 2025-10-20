@@ -18,12 +18,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyCAwJjD6mPd1gX1XdPYZ3s-wOM5mjuKkLQ",
+  authDomain: "hvac-v3.firebaseapp.com",
+  projectId: "hvac-v3",
+  storageBucket: "hvac-v3.appspot.com",  // ✅ fixed
+  messagingSenderId: "391662809459",
+  appId: "1:391662809459:web:f052c962d6c409b5a29506"
 };
 
 const app = initializeApp(firebaseConfig);
