@@ -54,13 +54,22 @@ const descriptionInput = document.getElementById("description");
 btnSignup.addEventListener("click", async () => {
   const email = emailInput.value.trim();
   const pass  = passInput.value.trim();
-  if (!email || !pass) return alert("Enter email and password.");
+  if (!email || !pass) return alert("Please enter both email and password.");
+
   try {
     await createUserWithEmailAndPassword(auth, email, pass);
     alert("Account created successfully!");
   } catch (e) {
     console.error(e);
-    alert("Signup error: " + e.message);
+    if (e.code === "auth/weak-password") {
+      alert("Password must be at least 6 characters long.");
+    } else if (e.code === "auth/email-already-in-use") {
+      alert("That email is already registered. Try logging in instead.");
+    } else if (e.code === "auth/invalid-email") {
+      alert("Please enter a valid email address.");
+    } else {
+      alert("Signup error: " + e.message);
+    }
   }
 });
 
