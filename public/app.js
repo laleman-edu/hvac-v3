@@ -135,3 +135,38 @@ btnRequest.addEventListener("click", async () => {
     alert("Error submitting request: " + e.message);
   }
 });
+
+// --------------- Appointment Scheduling ---------------
+import { updateDoc, doc } 
+  from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+const btnSchedule = document.getElementById("btn-schedule");
+const requestIdInput = document.getElementById("requestId");
+const dateInput = document.getElementById("appointmentDate");
+const timeInput = document.getElementById("appointmentTime");
+
+btnSchedule.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in first.");
+
+  const reqId = requestIdInput.value.trim();
+  const date = dateInput.value;
+  const time = timeInput.value;
+  if (!reqId || !date || !time) return alert("Please fill all fields.");
+
+  try {
+    const reqRef = doc(db, "requests", reqId);
+    await updateDoc(reqRef, {
+      appointmentDate: date,
+      appointmentTime: time,
+      status: "Scheduled"
+    });
+    alert("Appointment scheduled!");
+    requestIdInput.value = "";
+    dateInput.value = "";
+    timeInput.value = "";
+  } catch (e) {
+    console.error(e);
+    alert("Error scheduling appointment: " + e.message);
+  }
+});
