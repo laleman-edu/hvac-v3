@@ -9,25 +9,47 @@
   </head>
   <body>
 
-    <section id="auth-section">
-      <h2>Customer Login</h2>
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button id="btn-login">Login</button>
-      <button id="btn-signup">Create Account</button>
-      <button id="btn-logout" style="display:none;">Logout</button>
-    </section>
-
-
     <!-- Change note: Scaffolded responsive landing page with service request form for MVP validation. -->
     <header class="hero">
       <h1>Reliable HVAC Services</h1>
       <p>Request service, confirm appointments, and stay updated in one place.</p>
     </header>
+
     <main class="layout">
+
+<!-- .... to be deleted ....
+      <section id="auth-section">
+        <h2>Customer Login</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="btn-login">Login</button>
+        <button id="btn-signup">Create Account</button>
+        <button id="btn-logout" style="display:none;">Logout</button>
+      </section>
+-->
+     
+      <!-- 1️⃣ Login form -->
+      <section class="card">
+        <h2>Customer Login</h2>
+        <form id="authForm">
+          <label>
+            Email
+            <input type="email" id="email" placeholder="Email" required>
+          </label>
+          <label>
+            Password
+            <input type="password" id="password" placeholder="Password" required>
+          </label>
+          <button id="btn-login" type="button">Login</button>
+          <button id="btn-signup" type="button">Create Account</button>
+          <button id="btn-logout" type="button" style="display:none;">Logout</button>
+        </form>
+      </section>
+
       <section class="card">
         <h2>Request Service</h2>
         <form id="serviceRequestForm">
+
           <label>
             Service Type
             <select name="serviceType" required>
@@ -60,12 +82,9 @@
           <button type="submit">Submit Request</button>
           <p id="formStatus" role="status" aria-live="polite"></p>
         </form>
-
-
-
-
       </section>
-      <!-- Change note: Added placeholder auth controls to demo email/password flows for MVP. -->
+
+      <!-- .... to be deleted .... 
       <section class="card">
         <h2>Account Access</h2>
         <form id="loginForm">
@@ -82,6 +101,8 @@
         <button id="logoutButton" type="button">Logout</button>
         <p id="authStatus">Not signed in</p>
       </section>
+      -->
+      
       <section class="card">
         <h2>Next Steps</h2>
         <ol>
@@ -93,6 +114,7 @@
           Admin dashboard and reporting ship in later MVP milestones.
         </p>
       </section>
+
       <!-- Change note: Added service type display list to verify Firestore reads. -->
       <section class="card">
         <h2>Service Catalog</h2>
@@ -100,6 +122,7 @@
           <li>Loading service catalog...</li>
         </ul>
       </section>
+
     </main>
     <footer>
       <small>&copy; <span id="year"></span> HVAC Service Management System</small>
