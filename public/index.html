@@ -16,19 +16,7 @@
     </header>
 
     <main class="layout">
-
-<!-- .... to be deleted ....
-      <section id="auth-section">
-        <h2>Customer Login</h2>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button id="btn-login">Login</button>
-        <button id="btn-signup">Create Account</button>
-        <button id="btn-logout" style="display:none;">Logout</button>
-      </section>
--->
-     
-      <!-- 1️⃣ Login form -->
+      <!-- 1️⃣ Customer Login Section -->
       <section class="card">
         <h2>Customer Login</h2>
         <form id="authForm">
@@ -40,89 +28,45 @@
             Password
             <input type="password" id="password" placeholder="Password" required>
           </label>
-          <button id="btn-login" type="button">Login</button>
-          <button id="btn-signup" type="button">Create Account</button>
-          <button id="btn-logout" type="button" style="display:none;">Logout</button>
+          <div class="button-row">
+            <button id="btn-login" type="button">Login</button>
+            <button id="btn-signup" type="button">Create Account</button>
+            <button id="btn-logout" type="button" style="display:none;">Logout</button>
+          </div>
         </form>
       </section>
 
+      <!-- 2️⃣ Service Request Section -->
       <section class="card">
-        <h2>Request Service</h2>
+        <h2>Request a Service</h2>
         <form id="serviceRequestForm">
-
           <label>
             Service Type
-            <select name="serviceType" required>
-              <option value="">Select service</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="repair">Repair</option>
-              <option value="installation">Installation</option>
-            </select>
+            <input type="text" id="serviceType" placeholder="e.g. AC Repair" required>
           </label>
           <label>
-            Preferred Date
-            <input type="date" name="preferredDate" required />
+            Description
+            <input type="text" id="description" placeholder="Describe your issue..." required>
           </label>
-          <label>
-            Preferred Time
-            <input type="time" name="preferredTime" required />
-          </label>
-          <label>
-            Full Name
-            <input type="text" name="customerName" placeholder="Jane Smith" required />
-          </label>
-          <label>
-            Email
-            <input type="email" name="customerEmail" placeholder="jane@example.com" required />
-          </label>
-          <label>
-            Phone
-            <input type="tel" name="customerPhone" placeholder="(555) 123-4567" />
-          </label>
-          <button type="submit">Submit Request</button>
-          <p id="formStatus" role="status" aria-live="polite"></p>
+          <button id="btn-request" type="button">Submit Request</button>
         </form>
       </section>
 
-      <!-- .... to be deleted .... 
+      <!-- 3️⃣ Invoice Section Placeholder -->
       <section class="card">
-        <h2>Account Access</h2>
-        <form id="loginForm">
-          <label>
-            Email
-            <input type="email" name="email" placeholder="admin@example.com" required />
-          </label>
-          <label>
-            Password
-            <input type="password" name="password" placeholder="••••••••" required />
-          </label>
-          <button type="submit">Login</button>
-        </form>
-        <button id="logoutButton" type="button">Logout</button>
-        <p id="authStatus">Not signed in</p>
-      </section>
-      -->
-      
-      <section class="card">
-        <h2>Next Steps</h2>
-        <ol>
-          <li>Your request logs to Firestore for admin review.</li>
-          <li>Admin confirms appointment and sends invoice.</li>
-          <li>Stripe Checkout handles secure payment processing.</li>
-        </ol>
-        <p class="hint">
-          Admin dashboard and reporting ship in later MVP milestones.
-        </p>
+        <h2>Invoices (Pending)</h2>
+        <div id="invoice-list">
+          <p>No invoices yet. Requests submitted here will appear once billed.</p>
+        </div>
       </section>
 
-      <!-- Change note: Added service type display list to verify Firestore reads. -->
+      <!-- 4️⃣ Service Catalog Placeholder -->
       <section class="card">
-        <h2>Service Catalog</h2>
-        <ul id="serviceTypesList">
-          <li>Loading service catalog...</li>
-        </ul>
+        <h2>Available Services</h2>
+        <div id="service-list">
+          <p>Loading service types from Firestore...</p>
+        </div>
       </section>
-
     </main>
     <footer>
       <small>&copy; <span id="year"></span> HVAC Service Management System</small>
