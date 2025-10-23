@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HVAC Service Management — Invoices</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Invoice Center</h1>
+      <p>Review pending and completed invoices after your service is fulfilled.</p>
+      <nav class="hero-nav">
+        <a href="index.html">Home</a>
+        <a href="invoices.html" aria-current="page">Invoices (TODO)</a>
+      </nav>
+    </header>
+
+    <main class="layout single-column">
+      <section class="card">
+        <h2>Invoice Summary</h2>
+        <p>
+          Once a service request is completed and billed, the invoice details will appear here.
+        </p>
+        <!-- TODO(student04): Integrate invoice status feed once service workflows are complete. -->
+        <div class="placeholder-panel">
+          <p class="hint">
+            No invoices yet. Check back after your technician marks the job as completed.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <small>&copy; <span id="year"></span> HVAC Service Management System</small>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

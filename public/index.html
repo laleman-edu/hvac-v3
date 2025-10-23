@@ -12,13 +12,47 @@
     <!-- Change note: Scaffolded responsive landing page with service request form for MVP validation. -->
     <header class="hero">
       <h1>Reliable HVAC Services</h1>
-      <p>Request service, confirm appointments, and stay updated in one place.</p>
+      <p>Request service now, then create an account when you're ready to confirm.</p>
+      <nav class="hero-nav">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="invoices.html">Invoices (TODO)</a>
+      </nav>
     </header>
 
     <main class="layout">
-      <!-- 1️⃣ Customer Login Section -->
-      <section class="card">
+      <!-- 1️⃣ Customer Service Request Path -->
+      <section class="card" id="request-card">
+        <h2>Request a Service</h2>
+        <p class="hint">
+          Browse services and submit a request right away. We'll prompt you to log in only when you decide to commit.
+        </p>
+
+        <details id="serviceCatalog">
+          <summary>Browse available services</summary>
+          <div id="service-list">
+            <p class="hint">Loading service types...</p>
+          </div>
+        </details>
+
+        <form id="serviceRequestForm">
+          <label>
+            Service Type
+            <input type="text" id="serviceType" placeholder="e.g. AC Repair" required>
+          </label>
+          <label>
+            Description
+            <input type="text" id="description" placeholder="Describe your issue..." required>
+          </label>
+          <button id="btn-request" type="button">Submit Request</button>
+        </form>
+      </section>
+
+      <!-- 2️⃣ Customer Login / Account Path -->
+      <section class="card" id="auth-card">
         <h2>Customer Login</h2>
+        <p class="hint">
+          Prefer to sign in first? Log in or create a new account to save your requests.
+        </p>
         <form id="authForm">
           <label>
             Email
@@ -37,25 +71,12 @@
         </form>
       </section>
 
-      <!-- 2️⃣ Service Request Section -->
-      <section class="card">
-        <h2>Request a Service</h2>
-        <form id="serviceRequestForm">
-          <label>
-            Service Type
-            <input type="text" id="serviceType" placeholder="e.g. AC Repair" required>
-          </label>
-          <label>
-            Description
-            <input type="text" id="description" placeholder="Describe your issue..." required>
-          </label>
-          <button id="btn-request" type="button">Submit Request</button>
-        </form>
-      </section>
-
-      <!-- 2️⃣b  Schedule Appointment Section -->
-      <section class="card">
+      <!-- 3️⃣ Schedule Appointment (revealed once logged in and committed) -->
+      <section class="card is-hidden" id="scheduleCard" aria-hidden="true">
         <h2>Schedule Appointment</h2>
+        <p class="hint" id="schedule-hint">
+          We’ll unlock scheduling once you submit a request while logged in.
+        </p>
         <form id="scheduleForm">
           <label>
             Service Request ID
@@ -69,24 +90,8 @@
             Appointment Time
             <input type="time" id="appointmentTime" required>
           </label>
-          <button id="btn-schedule" type="button">Schedule</button>
+          <button id="btn-schedule" type="button" disabled>Schedule</button>
         </form>
-      </section>
-
-      <!-- 3️⃣ Invoice Section Placeholder -->
-      <section class="card">
-        <h2>Invoices (Pending)</h2>
-        <div id="invoice-list">
-          <p>No invoices yet. Requests submitted here will appear once billed.</p>
-        </div>
-      </section>
-
-      <!-- 4️⃣ Service Catalog Placeholder -->
-      <section class="card">
-        <h2>Available Services</h2>
-        <div id="service-list">
-          <p>Loading service types from Firestore...</p>
-        </div>
       </section>
     </main>
     <footer>

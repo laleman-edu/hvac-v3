@@ -1,0 +1,92 @@
+﻿https://hvac-v3.web.app/
+
+Storyboard script- The following is the workflow steps and page behavior to adjust the code to match the script listed here, do not focus in aestetics, the goal here is workflow, behavior and functionalities to that affects the UI/IX:
+
+Act 1) The customer lands on the page and have x2 options 1)Request a Service without login in until the user is ready to commit to a request, then ask for user id and password or register, or 2)  ask for user id and password or register.
+
+Which might mean to combine these two elements in the same landing page (index.html):
+
+<section class="card">
+        <h2>Request a Service</h2>
+...which opens a pulldown menu:
+<section class="card">
+        <h2>Available Services</h2>
+        <div id="service-list">
+          <p>Loading service types from Firestore...</p> read database of servies avalable (make up a quick example table no more than 10 lines
+
+        </div>
+      </section>
+
+        <form id="serviceRequestForm">
+          <label>
+            Service Type
+            <input type="text" id="serviceType" placeholder="e.g. AC Repair" required="">
+          </label>
+          <label>
+            Description
+            <input type="text" id="description" placeholder="Describe your issue..." required="">
+          </label>
+          <button id="btn-request" type="button">Submit Request</button>
+        </form>
+      </section>
+
+...on top of :
+<section class="card">
+        <h2>Customer Login</h2>
+        <form id="authForm">
+          <label>
+            Email
+            <input type="email" id="email" placeholder="Email" required="">
+          </label>
+          <label>
+            Password
+            <input type="password" id="password" placeholder="Password" required="">
+            <small id="password-hint">Password must be at least 6 characters.</small>
+          </label>
+          <div class="button-row">
+            <button id="btn-login" type="button">Login</button>
+            <button id="btn-signup" type="button">Create Account</button>
+            <button id="btn-logout" type="button" style="display:none;">Logout</button>
+          </div>
+        </form>
+      </section>
+
+for this element, only show up after 1) I am ready to commit to a service AND 2) I am already logged in:
+<section class="card">
+        <h2>Schedule Appointment</h2>
+        <form id="scheduleForm">
+          <label>
+            Service Request ID
+            <input type="text" id="requestId" placeholder="Enter request ID" required="">
+          </label>
+          <label>
+            Appointment Date
+            <input type="date" id="appointmentDate" required="">
+          </label>
+          <label>
+            Appointment Time
+            <input type="time" id="appointmentTime" required="">
+          </label>
+          <button id="btn-schedule" type="button">Schedule</button>
+        </form>
+      </section>
+
+regarding invoice pending, do not get rid of it but place it in a separate page to come bake (att a TODO for me to come back to it t the end of the project) once the service is rendered
+ <section class="card">
+        <h2>Schedule Appointment</h2>
+        <form id="scheduleForm">
+          <label>
+            Service Request ID
+            <input type="text" id="requestId" placeholder="Enter request ID" required="">
+          </label>
+          <label>
+            Appointment Date
+            <input type="date" id="appointmentDate" required="">
+          </label>
+          <label>
+            Appointment Time
+            <input type="time" id="appointmentTime" required="">
+          </label>
+          <button id="btn-schedule" type="button">Schedule</button>
+        </form>
+      </section>

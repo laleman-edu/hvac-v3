@@ -24,12 +24,35 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.hero-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.hero-nav a {
+  color: #bfdbfe;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hero-nav a[aria-current="page"] {
+  text-decoration: underline;
+}
+
 .layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   padding: 2rem;
   flex: 1;
+}
+
+.layout.single-column {
+  grid-template-columns: minmax(280px, 720px);
+  justify-content: center;
 }
 
 .card {
@@ -80,6 +103,56 @@ button:hover {
 .hint {
   color: #64748b;
   font-style: italic;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+details {
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  margin-bottom: 1.25rem;
+}
+
+details[open] {
+  background-color: #eef2ff;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+.service-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.service-table th,
+.service-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #cbd5f5;
+}
+
+.service-table th {
+  background-color: #e0e7ff;
+}
+
+.placeholder-panel {
+  border: 1px dashed #cbd5f5;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background-color: #f8fafc;
 }
 
 footer {
