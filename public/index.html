@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HVAC Service Management</title>
     <link rel="stylesheet" href="styles.css" />
-    <script defer type="module" src="/app.js"></script>
+    <!-- Change note: Loading module via relative path for Firebase Hosting compatibility. -->
+    <script defer type="module" src="app.js"></script>
   </head>
   <body>
 
-    <!-- Change note: Scaffolded responsive landing page with service request form for MVP validation. -->
+    <!-- Change note: Reorganized hero copy to align with new account-first workflow messaging. -->
     <header class="hero">
       <h1>Reliable HVAC Services</h1>
-      <p>Request service now, then create an account when you're ready to confirm.</p>
+      <p>Please, create or login to your account to be able to send a Service Request.</p>
       <nav class="hero-nav">
         <a href="index.html" aria-current="page">Home</a>
         <a href="invoices.html">Invoices (TODO)</a>
@@ -20,38 +21,11 @@
     </header>
 
     <main class="layout">
-      <!-- 1️⃣ Customer Service Request Path -->
-      <section class="card" id="request-card">
-        <h2>Request a Service</h2>
-        <p class="hint">
-          Browse services and submit a request right away. We'll prompt you to log in only when you decide to commit.
-        </p>
-
-        <details id="serviceCatalog">
-          <summary>Browse available services</summary>
-          <div id="service-list">
-            <p class="hint">Loading service types...</p>
-          </div>
-        </details>
-
-        <form id="serviceRequestForm">
-          <label>
-            Service Type
-            <input type="text" id="serviceType" placeholder="e.g. AC Repair" required>
-          </label>
-          <label>
-            Description
-            <input type="text" id="description" placeholder="Describe your issue..." required>
-          </label>
-          <button id="btn-request" type="button">Submit Request</button>
-        </form>
-      </section>
-
-      <!-- 2️⃣ Customer Login / Account Path -->
+      <!-- Change note: Moved customer login ahead of service request to encourage account-first flow. -->
       <section class="card" id="auth-card">
         <h2>Customer Login</h2>
         <p class="hint">
-          Prefer to sign in first? Log in or create a new account to save your requests.
+          Sign in to unlock account management and submit service requests.
         </p>
         <form id="authForm">
           <label>
@@ -68,6 +42,71 @@
             <button id="btn-signup" type="button">Create Account</button>
             <button id="btn-logout" type="button" style="display:none;">Logout</button>
           </div>
+        </form>
+      </section>
+
+      <!-- Change note: Added gated account editor that remains disabled until authentication succeeds. -->
+      <section class="card" id="account-card">
+        <h2>Create or Update Account</h2>
+        <p class="hint">
+          Complete your profile after logging in to speed up scheduling and invoicing.
+        </p>
+        <form id="accountForm">
+          <fieldset id="accountFieldset" disabled>
+            <label>
+              Full Name
+              <input type="text" id="accountName" placeholder="Jane Smith">
+            </label>
+            <label>
+              Email
+              <input type="email" id="accountEmail" placeholder="jane@example.com">
+            </label>
+            <label>
+              Telephone
+              <input type="tel" id="accountTelephone" placeholder="(555) 123-4567">
+            </label>
+            <label>
+              Preferred Communication Channel
+              <select id="accountChannel">
+                <option value="">Select channel</option>
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+                <option value="phone">Phone Call</option>
+              </select>
+            </label>
+            <button id="btn-save-account" type="button">Save Account</button>
+          </fieldset>
+        </form>
+      </section>
+
+      <!-- Change note: Updated service catalog to surface table and dropdown selector sourced from Firestore. -->
+      <section class="card" id="catalog-card">
+        <h2>Browse Available Services</h2>
+        <p class="hint">
+          Choose a service catalog entry for future accounting and scheduling flows.
+        </p>
+        <div id="serviceTableWrapper">
+          <p class="hint">Loading service types...</p>
+        </div>
+        <label class="service-select-label">
+          Select Service Type
+          <select id="serviceTypeSelect">
+            <option value="">Loading...</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="card" id="request-card">
+        <h2>Request a Service</h2>
+        <p class="hint">
+          Provide key details and submit once your account is ready.
+        </p>
+        <form id="serviceRequestForm">
+          <label>
+            Description
+            <input type="text" id="description" placeholder="Describe your issue..." required>
+          </label>
+          <button id="btn-request" type="button">Submit Request</button>
         </form>
       </section>
 

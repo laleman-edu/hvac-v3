@@ -1,0 +1,26 @@
+[
+  {
+    "id": "srv001",
+    "name": "AC Maintenance",
+    "price": 100,
+    "duration": "1h"
+  },
+  {
+    "id": "srv002",
+    "name": "System Diagnostics",
+    "price": 80,
+    "duration": "45m"
+  },
+  {
+    "id": "srv003",
+    "name": "Heat Pump Tune-Up",
+    "price": 140,
+    "duration": "90m"
+  },
+  {
+    "id": "srv004",
+    "name": "Duct Cleaning Bundle",
+    "price": 220,
+    "duration": "2h"
+  }
+]

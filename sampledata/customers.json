@@ -1,0 +1,79 @@
+[
+  {
+    "id": "cust001",
+    "name": "John Rivera",
+    "email": "john@example.com",
+    "telephone": "7875551234",
+    "preferredCommunicationChannel": "email"
+  },
+  {
+    "id": "cust002",
+    "name": "Maria Chen",
+    "email": "maria.chen@example.com",
+    "telephone": "2125550199",
+    "preferredCommunicationChannel": "sms"
+  },
+  {
+    "id": "cust003",
+    "name": "Trevor Gomez",
+    "email": "trevor.gomez@example.com",
+    "telephone": "3055554422",
+    "preferredCommunicationChannel": "phone"
+  },
+  {
+    "id": "cust004",
+    "name": "Aisha Patel",
+    "email": "aisha.patel@example.com",
+    "telephone": "9725558876",
+    "preferredCommunicationChannel": "email"
+  },
+  {
+    "id": "cust005",
+    "name": "Liam OConnor",
+    "email": "liam.oconnor@example.com",
+    "telephone": "6175552045",
+    "preferredCommunicationChannel": "sms"
+  },
+  {
+    "id": "cust006",
+    "name": "Sofia Martinez",
+    "email": "sofia.martinez@example.com",
+    "telephone": "6025557741",
+    "preferredCommunicationChannel": "email"
+  },
+  {
+    "id": "cust007",
+    "name": "Ethan Brooks",
+    "email": "ethan.brooks@example.com",
+    "telephone": "4255556633",
+    "preferredCommunicationChannel": "phone"
+  },
+  {
+    "id": "cust008",
+    "name": "Priya Desai",
+    "email": "priya.desai@example.com",
+    "telephone": "4085551188",
+    "preferredCommunicationChannel": "sms"
+  },
+  {
+    "id": "cust009",
+    "name": "Carlos Mendes",
+    "email": "carlos.mendes@example.com",
+    "telephone": "4705559302",
+    "preferredCommunicationChannel": "email"
+  },
+  {
+    "id": "cust010",
+    "name": "Hannah Lee",
+    "email": "hannah.lee@example.com",
+    "telephone": "9195557460",
+    "preferredCommunicationChannel": "phone"
+  },
+  {
+    "id": "cust011",
+    "name": "Omar Hassan",
+    "email": "omar.hassan@example.com",
+    "telephone": "8135555527",
+    "preferredCommunicationChannel": "sms"
+  }
+]

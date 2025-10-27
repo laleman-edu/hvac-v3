@@ -22,3 +22,5 @@ It provides end-to-end functionality from **service request** → **appointment 
 ## Version History & File Movements
 - 2025-10-18: Added Firebase MVP scaffold including `public/index.html`, `public/styles.css`, `public/app.js`, Functions boilerplate (`functions/index.js`, `functions/package.json`), root configs (`firebase.json`, `.firebaserc`), and updated `.gitignore` for Firebase artifacts.
 - 2025-10-18: Configured Firestore rules (`firestore.rules`), expanded auth-enabled UI (`public/index.html`, `public/app.js`), augmented Functions triggers (`functions/index.js`), and introduced sample data helper (`functions/sampleData.js`) for Phase 2 setup.
+- 2025-10-18: Separated customer seed data into `sampledata/customers.json` with extended contact fields and updated loader (`sampledata/sampleData.js`) to consume it.
+- 2025-10-18: Reordered landing workflow with gated account editor, table-driven service catalog, and dropdown selection (`public/index.html`, `public/app.js`, `public/styles.css`), and centralized seed data in `sampledata/serviceTypes.json`.

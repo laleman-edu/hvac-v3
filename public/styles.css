@@ -109,6 +109,16 @@ button:hover {
   display: none !important;
 }
 
+/* Change note: Styled disabled account editor to appear greyed-out while locked. */
+fieldset.is-disabled {
+  opacity: 0.55;
+  filter: grayscale(0.2);
+}
+
+fieldset.is-disabled button {
+  pointer-events: none;
+}
+
 details {
   border: 1px solid #d1d5db;
   border-radius: 0.75rem;
@@ -146,6 +156,13 @@ details summary::-webkit-details-marker {
 
 .service-table th {
   background-color: #e0e7ff;
+}
+
+.service-select-label {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-weight: 600;
 }
 
 .placeholder-panel {

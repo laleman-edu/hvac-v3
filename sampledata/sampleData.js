@@ -1,4 +1,4 @@
-/* Change note: Restored CLI helper that seeds Firestore using shared sampledata JSON files. */
+/* Change note: Added manual helper to load sample service types and customers for MVP testing. */
 const admin = require("firebase-admin");
 
 if (!admin.apps.length) {
@@ -7,10 +7,13 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-const serviceTypes = require("../sampledata/serviceTypes.json");
-const customers = require("../sampledata/customers.json");
+// Change note: Pulled service types from shared JSON to keep seed data in sync with UI dropdown.
+const serviceTypes = require("./serviceTypes.json");
 
-// Change note: Seeds Firestore collections with catalog and customer fixtures when invoked manually.
+// Change note: Sourced customer dataset from external JSON to simplify bulk editing.
+const customers = require("./customers.json");
+
+// Change note: Exposed manual loader to seed baseline catalog and contacts without auto-running.
 const loadSampleData = async () => {
   const batch = db.batch();
 

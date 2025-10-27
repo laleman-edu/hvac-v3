@@ -4,22 +4,29 @@
    ============================================================ */
 
 // --------------- Imports ---------------
-import { initializeApp, getApps, getApp } 
+import { initializeApp, getApps, getApp }
   from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 
-import { 
+import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged 
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
 import {
   getFirestore,
   collection,
   addDoc,
-  serverTimestamp
+  serverTimestamp,
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  getDocs,
+  query,
+  orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 // --------------- Firebase Configuration ---------------
@@ -46,7 +53,6 @@ const btnSchedule = document.getElementById("btn-schedule");
 
 const emailInput = document.getElementById("email");
 const passInput  = document.getElementById("password");
-const serviceTypeInput = document.getElementById("serviceType");
 const descriptionInput = document.getElementById("description");
 const requestIdInput = document.getElementById("requestId");
 const dateInput = document.getElementById("appointmentDate");
@@ -55,17 +61,82 @@ const timeInput = document.getElementById("appointmentTime");
 const authCard = document.getElementById("auth-card");
 const scheduleCard = document.getElementById("scheduleCard");
 const scheduleHint = document.getElementById("schedule-hint");
-const serviceListContainer = document.getElementById("service-list");
+const serviceTableWrapper = document.getElementById("serviceTableWrapper");
+const serviceTypeSelect = document.getElementById("serviceTypeSelect");
+const accountFieldset = document.getElementById("accountFieldset");
+const accountNameInput = document.getElementById("accountName");
+const accountEmailInput = document.getElementById("accountEmail");
+const accountTelephoneInput = document.getElementById("accountTelephone");
+const accountChannelSelect = document.getElementById("accountChannel");
+const btnSaveAccount = document.getElementById("btn-save-account");
 const yearNode = document.getElementById("year");
 
 if (yearNode) {
   yearNode.textContent = new Date().getFullYear();
 }
 
+if (accountFieldset) {
+  accountFieldset.classList.add("is-disabled");
+}
+
 // Track commitment flow for scheduling access
 let userIsLoggedIn = false;
 let hasCommittedRequest = false;
 let lastCreatedRequestId = "";
+let serviceTypesCache = [];
+const staticServiceTypesFallback = [
+  { id: "srv001", name: "AC Maintenance", price: 100, duration: "1h" },
+  { id: "srv002", name: "System Diagnostics", price: 80, duration: "45m" },
+  { id: "srv003", name: "Heat Pump Tune-Up", price: 140, duration: "90m" },
+  { id: "srv004", name: "Duct Cleaning Bundle", price: 220, duration: "2h" },
+];
+
+// Change note: Added helper to toggle account form availability based on auth state.
+const toggleAccountFieldset = (enabled) => {
+  if (!accountFieldset) return;
+  accountFieldset.disabled = !enabled;
+  accountFieldset.classList.toggle("is-disabled", !enabled);
+};
+
+// Change note: Added helper to populate account editor from Firestore profile.
+const populateAccountForm = (data = {}) => {
+  if (!accountFieldset || !accountNameInput || !accountEmailInput || !accountTelephoneInput || !accountChannelSelect) {
+    return;
+  }
+  accountNameInput.value = data.name || "";
+  accountEmailInput.value = data.email || auth.currentUser?.email || "";
+  accountTelephoneInput.value = data.telephone || "";
+  accountChannelSelect.value = data.preferredCommunicationChannel || "";
+};
+
+// Change note: Added reset to blank profile when session ends.
+const clearAccountForm = () => {
+  if (!accountNameInput || !accountEmailInput || !accountTelephoneInput || !accountChannelSelect) {
+    return;
+  }
+  accountNameInput.value = "";
+  accountEmailInput.value = "";
+  accountTelephoneInput.value = "";
+  accountChannelSelect.value = "";
+};
+
+// Change note: Added Firestore loader to hydrate account editor when available.
+const loadAccountProfile = async (uid) => {
+  if (!uid) return null;
+  try {
+    const docRef = doc(db, "customers", uid);
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      populateAccountForm(data);
+      return data;
+    }
+  } catch (error) {
+    console.error("Failed to load customer profile", error);
+  }
+  populateAccountForm();
+  return null;
+};
 
 const updateScheduleVisibility = () => {
   if (!scheduleCard || !btnSchedule || !scheduleHint) return;
@@ -87,18 +158,19 @@ const updateScheduleVisibility = () => {
 };
 
 // --------------- Service Catalog Rendering ---------------
-const sampleServices = [
-  { name: "AC Tune-Up", response: "48 hrs", starting: "$89" },
-  { name: "Emergency Cooling Repair", response: "4 hrs", starting: "$249" },
-  { name: "Heater Diagnostic", response: "24 hrs", starting: "$119" },
-  { name: "Duct Cleaning", response: "72 hrs", starting: "$199" },
-  { name: "Thermostat Installation", response: "36 hrs", starting: "$129" },
-  { name: "Indoor Air Quality Audit", response: "72 hrs", starting: "$149" },
-  { name: "Commercial Maintenance Plan", response: "Custom", starting: "Quote" }
-];
+// Change note: Rendering Firestore-driven service catalog table and dropdown.
+const renderServiceCatalog = (services = []) => {
+  if (!serviceTableWrapper || !serviceTypeSelect) return;
 
-const renderServiceCatalog = () => {
-  if (!serviceListContainer) return;
+  serviceTableWrapper.innerHTML = "";
+  serviceTypeSelect.innerHTML = "";
+
+  if (!services.length) {
+    serviceTableWrapper.innerHTML =
+      "<p class=\"hint\">No service types configured yet.</p>";
+    serviceTypeSelect.innerHTML = "<option value=\"\">No services available</option>";
+    return;
+  }
 
   const table = document.createElement("table");
   table.className = "service-table";
@@ -106,31 +178,81 @@ const renderServiceCatalog = () => {
   const thead = document.createElement("thead");
   thead.innerHTML = `
     <tr>
-      <th scope="col">Service</th>
-      <th scope="col">Typical Response</th>
-      <th scope="col">Starting Price</th>
+      <th scope=\"col\">Service</th>
+      <th scope=\"col\">Price</th>
+      <th scope=\"col\">Duration</th>
     </tr>
   `;
 
   const tbody = document.createElement("tbody");
-  sampleServices.forEach(({ name, response, starting }) => {
+  services.forEach(({ id, name, price, duration }) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${name}</td>
-      <td>${response}</td>
-      <td>${starting}</td>
+      <td>${typeof price === "number" ? `$${price.toFixed(2)}` : price}</td>
+      <td>${duration || "—"}</td>
     `;
     tbody.appendChild(row);
   });
 
   table.appendChild(thead);
   table.appendChild(tbody);
+  serviceTableWrapper.appendChild(table);
 
-  serviceListContainer.innerHTML = "";
-  serviceListContainer.appendChild(table);
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Select a service type";
+  serviceTypeSelect.appendChild(defaultOption);
+
+  services.forEach(({ id, name }) => {
+    const option = document.createElement("option");
+    option.value = id;
+    option.textContent = name;
+    serviceTypeSelect.appendChild(option);
+  });
 };
 
-renderServiceCatalog();
+// Change note: Added fallback loader consuming static JSON when Firestore is empty or unavailable.
+const loadServiceTypesFallback = async () => {
+  try {
+    const response = await fetch("/sampledata/serviceTypes.json");
+    if (!response.ok) throw new Error("Fallback service types not found.");
+    const data = await response.json();
+    if (!Array.isArray(data) || !data.length) {
+      return staticServiceTypesFallback;
+    }
+    return data;
+  } catch (error) {
+    console.error("Fallback service types load failed", error);
+    return staticServiceTypesFallback;
+  }
+};
+
+const fetchServiceTypes = async () => {
+  if (!serviceTableWrapper || !serviceTypeSelect) return;
+  serviceTableWrapper.innerHTML = "<p class=\"hint\">Loading service types...</p>";
+  serviceTypeSelect.innerHTML = "<option value=\"\">Loading...</option>";
+  try {
+    const serviceTypeQuery = query(
+      collection(db, "servicetypes"),
+      orderBy("name", "asc")
+    );
+    const snapshot = await getDocs(serviceTypeQuery);
+    const fetched = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data(),
+    }));
+    serviceTypesCache =
+      fetched.length > 0 ? fetched : await loadServiceTypesFallback();
+    renderServiceCatalog(serviceTypesCache);
+  } catch (error) {
+    console.error("Failed to load service types", error);
+    serviceTypesCache = await loadServiceTypesFallback();
+    renderServiceCatalog(serviceTypesCache);
+  }
+};
+
+fetchServiceTypes();
 
 // --------------- Auth Event Handlers ---------------
 
@@ -181,18 +303,58 @@ btnLogout?.addEventListener("click", async () => {
   }
 });
 
+// Change note: Added save handler to persist enriched account profile fields.
+btnSaveAccount?.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) {
+    return alert("Login is required before updating account details.");
+  }
+
+  if (!accountNameInput || !accountEmailInput || !accountTelephoneInput || !accountChannelSelect) {
+    console.error("Account form elements missing");
+    return alert("Account form is unavailable. Refresh and try again.");
+  }
+
+  const payload = {
+    name: accountNameInput.value.trim(),
+    email: accountEmailInput.value.trim() || user.email || "",
+    telephone: accountTelephoneInput.value.trim(),
+    preferredCommunicationChannel: accountChannelSelect.value,
+    updatedAt: serverTimestamp(),
+  };
+
+  if (!payload.name || !payload.email || !payload.telephone || !payload.preferredCommunicationChannel) {
+    return alert("Please complete all account fields before saving.");
+  }
+
+  try {
+    await setDoc(doc(db, "customers", user.uid), {
+      ...payload,
+      uid: user.uid,
+    }, { merge: true });
+    alert("Account details saved!");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to save account: " + error.message);
+  }
+});
+
 // Track session
 onAuthStateChanged(auth, user => {
   if (user) {
     console.log("Auth state change detected:", user.email || user.uid);
     if (btnLogout) btnLogout.style.display = "inline";
     userIsLoggedIn = true;
+    toggleAccountFieldset(true);
+    loadAccountProfile(user.uid);
   } else {
     console.log("No active session.");
     if (btnLogout) btnLogout.style.display = "none";
     userIsLoggedIn = false;
     hasCommittedRequest = false;
     lastCreatedRequestId = "";
+    toggleAccountFieldset(false);
+    clearAccountForm();
   }
   updateScheduleVisibility();
 });
@@ -201,27 +363,33 @@ onAuthStateChanged(auth, user => {
 btnRequest?.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) {
-    authCard?.scrollIntoView({ behavior: "smooth", block: "start" });
-    return alert("Please log in or create an account to submit your request.");
-  }
+  authCard?.scrollIntoView({ behavior: "smooth", block: "start" });
+  return alert("Please log in or create an account to submit your request.");
+}
 
-  const serviceType = serviceTypeInput.value.trim();
+  const selectedServiceType = serviceTypeSelect?.value || "";
   const description = descriptionInput.value.trim();
-  if (!serviceType || !description)
-    return alert("Please complete both fields.");
+  if (!selectedServiceType) {
+    return alert("Select a service type from the catalog dropdown before submitting.");
+  }
+  if (!description) return alert("Please provide a brief description.");
 
   try {
+    const serviceMeta = serviceTypesCache.find((svc) => svc.id === selectedServiceType) || {};
     const docRef = await addDoc(collection(db, "requests"), {
       uid: user.uid,
       email: user.email || "anonymous",
-      serviceType,
+      serviceTypeId: selectedServiceType,
+      serviceTypeName: serviceMeta.name || "",
       description,
       status: "Pending",
       createdAt: serverTimestamp()
     });
     alert(`Service request submitted! Confirmation ID: ${docRef.id}`);
-    serviceTypeInput.value = "";
     descriptionInput.value = "";
+    if (serviceTypeSelect) {
+      serviceTypeSelect.value = "";
+    }
 
     hasCommittedRequest = true;
     lastCreatedRequestId = docRef.id;
@@ -233,9 +401,6 @@ btnRequest?.addEventListener("click", async () => {
 });
 
 // --------------- Appointment Scheduling ---------------
-import { updateDoc, doc } 
-  from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-
 btnSchedule?.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) return alert("Please log in first.");
