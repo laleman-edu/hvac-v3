@@ -3,7 +3,7 @@ __pycache__/
 .vscode/
 .firebase/
 node_modules/
-_local_notes/
+_local_notes/ 
 _temp/
 _*.md
 *.tmp
