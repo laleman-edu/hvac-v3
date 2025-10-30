@@ -1,6 +1,7 @@
 # Local development ignores
 __pycache__/
 .vscode/
+.firebase/
 node_modules/
 _local_notes/
 _temp/
