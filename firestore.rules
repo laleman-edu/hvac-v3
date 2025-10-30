@@ -12,6 +12,13 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == customerId;
     }
 
+    // Change note: Permit authenticated customers to create and manage their own service requests.
+    match /requests/{requestId} {
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      allow read, update, delete: if request.auth != null
+        && (resource.data.uid == request.auth.uid || request.auth.token.admin == true);
+    }
+
     // Change note: Grant authenticated users appointment CRUD to enable scheduling workflows.
     match /appointments/{appointmentId} {
       allow read, write: if request.auth != null;

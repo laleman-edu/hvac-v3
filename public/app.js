@@ -18,7 +18,6 @@ import {
 import {
   getFirestore,
   collection,
-  addDoc,
   serverTimestamp,
   setDoc,
   doc,
@@ -26,7 +25,8 @@ import {
   updateDoc,
   getDocs,
   query,
-  orderBy
+  orderBy,
+  arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 // --------------- Firebase Configuration ---------------
@@ -54,9 +54,17 @@ const btnSchedule = document.getElementById("btn-schedule");
 const emailInput = document.getElementById("email");
 const passInput  = document.getElementById("password");
 const descriptionInput = document.getElementById("description");
+const preferredDateInput = document.getElementById("preferredDate");
+const preferredTimeInput = document.getElementById("preferredTime");
+const preferredWindowSelect = document.getElementById("preferredWindow");
+const serviceSourceSelect = document.getElementById("serviceSource");
+const additionalNotesInput = document.getElementById("additionalNotes");
 const requestIdInput = document.getElementById("requestId");
 const dateInput = document.getElementById("appointmentDate");
 const timeInput = document.getElementById("appointmentTime");
+const endTimeInput = document.getElementById("appointmentEndTime");
+const technicianInput = document.getElementById("technicianName");
+const appointmentStatusSelect = document.getElementById("appointmentStatus");
 
 const authCard = document.getElementById("auth-card");
 const scheduleCard = document.getElementById("scheduleCard");
@@ -83,7 +91,11 @@ if (accountFieldset) {
 let userIsLoggedIn = false;
 let hasCommittedRequest = false;
 let lastCreatedRequestId = "";
+let lastPreferredDate = "";
+let lastPreferredTime = "";
+let lastPreferredWindow = "";
 let serviceTypesCache = [];
+let cachedAccountProfile = null;
 const staticServiceTypesFallback = [
   { id: "srv001", name: "AC Maintenance", price: 100, duration: "1h" },
   { id: "srv002", name: "System Diagnostics", price: 80, duration: "45m" },
@@ -103,6 +115,7 @@ const populateAccountForm = (data = {}) => {
   if (!accountFieldset || !accountNameInput || !accountEmailInput || !accountTelephoneInput || !accountChannelSelect) {
     return;
   }
+  cachedAccountProfile = { ...data };
   accountNameInput.value = data.name || "";
   accountEmailInput.value = data.email || auth.currentUser?.email || "";
   accountTelephoneInput.value = data.telephone || "";
@@ -114,6 +127,7 @@ const clearAccountForm = () => {
   if (!accountNameInput || !accountEmailInput || !accountTelephoneInput || !accountChannelSelect) {
     return;
   }
+  cachedAccountProfile = null;
   accountNameInput.value = "";
   accountEmailInput.value = "";
   accountTelephoneInput.value = "";
@@ -152,8 +166,26 @@ const updateScheduleVisibility = () => {
 
   if (canSchedule && lastCreatedRequestId && requestIdInput) {
     requestIdInput.value = lastCreatedRequestId;
+    if (lastPreferredDate && dateInput) {
+      dateInput.value = lastPreferredDate;
+    }
+    if (lastPreferredTime && timeInput) {
+      timeInput.value = lastPreferredTime;
+    }
+    if (preferredWindowSelect && appointmentStatusSelect && lastPreferredWindow === "flexible") {
+      appointmentStatusSelect.value = "Proposed";
+    }
   } else if (!canSchedule && requestIdInput) {
     requestIdInput.value = "";
+  }
+  if (!canSchedule && dateInput) {
+    dateInput.value = "";
+  }
+  if (!canSchedule && timeInput) {
+    timeInput.value = "";
+  }
+  if (!canSchedule && endTimeInput) {
+    endTimeInput.value = "";
   }
 };
 
@@ -333,6 +365,11 @@ btnSaveAccount?.addEventListener("click", async () => {
       uid: user.uid,
     }, { merge: true });
     alert("Account details saved!");
+    cachedAccountProfile = {
+      ...cachedAccountProfile,
+      ...payload,
+      uid: user.uid,
+    };
   } catch (error) {
     console.error(error);
     alert("Failed to save account: " + error.message);
@@ -363,36 +400,91 @@ onAuthStateChanged(auth, user => {
 btnRequest?.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) {
-  authCard?.scrollIntoView({ behavior: "smooth", block: "start" });
-  return alert("Please log in or create an account to submit your request.");
-}
+    authCard?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return alert("Please log in or create an account to submit your request.");
+  }
 
   const selectedServiceType = serviceTypeSelect?.value || "";
   const description = descriptionInput.value.trim();
+  const preferredDate = preferredDateInput?.value || "";
+  const preferredTime = preferredTimeInput?.value || "";
+  const preferredWindow = preferredWindowSelect?.value || "";
+  const serviceSource = serviceSourceSelect?.value || "";
+  const additionalNotes = additionalNotesInput?.value.trim() || "";
+
+  if (!cachedAccountProfile) {
+    cachedAccountProfile = await loadAccountProfile(user.uid);
+  }
+
+  if (!cachedAccountProfile || !cachedAccountProfile.name || !cachedAccountProfile.telephone || !cachedAccountProfile.preferredCommunicationChannel) {
+    return alert("Please complete your account information before submitting a request.");
+  }
+
   if (!selectedServiceType) {
     return alert("Select a service type from the catalog dropdown before submitting.");
   }
   if (!description) return alert("Please provide a brief description.");
+  if (!preferredDate || !preferredTime || !preferredWindow) {
+    return alert("Select your preferred date, time, and window.");
+  }
+  if (!serviceSource) {
+    return alert("Let us know how you heard about us.");
+  }
 
   try {
     const serviceMeta = serviceTypesCache.find((svc) => svc.id === selectedServiceType) || {};
-    const docRef = await addDoc(collection(db, "requests"), {
+    const requestsCollection = collection(db, "requests");
+    const requestRef = doc(requestsCollection);
+    await setDoc(requestRef, {
       uid: user.uid,
       email: user.email || "anonymous",
       serviceTypeId: selectedServiceType,
       serviceTypeName: serviceMeta.name || "",
       description,
+      preferredDate,
+      preferredTime,
+      preferredWindow,
+      serviceSource,
+      notes: additionalNotes,
+      contactName: cachedAccountProfile.name || "",
+      contactTelephone: cachedAccountProfile.telephone || "",
+      contactChannel: cachedAccountProfile.preferredCommunicationChannel || "",
       status: "Pending",
+      transactionId: requestRef.id,
+      statusHistory: [
+        {
+          status: "Pending",
+          changedAt: new Date().toISOString(),
+        }
+      ],
       createdAt: serverTimestamp()
     });
-    alert(`Service request submitted! Confirmation ID: ${docRef.id}`);
+    alert(`Service request submitted! Confirmation ID: ${requestRef.id}`);
     descriptionInput.value = "";
+    if (additionalNotesInput) {
+      additionalNotesInput.value = "";
+    }
+    if (preferredDateInput) {
+      preferredDateInput.value = "";
+    }
+    if (preferredTimeInput) {
+      preferredTimeInput.value = "";
+    }
+    if (preferredWindowSelect) {
+      preferredWindowSelect.value = "";
+    }
+    if (serviceSourceSelect) {
+      serviceSourceSelect.value = "";
+    }
     if (serviceTypeSelect) {
       serviceTypeSelect.value = "";
     }
 
     hasCommittedRequest = true;
-    lastCreatedRequestId = docRef.id;
+    lastCreatedRequestId = requestRef.id;
+    lastPreferredDate = preferredDate;
+    lastPreferredTime = preferredTime;
+    lastPreferredWindow = preferredWindow;
     updateScheduleVisibility();
   } catch (e) {
     console.error(e);
@@ -408,19 +500,67 @@ btnSchedule?.addEventListener("click", async () => {
   const reqId = requestIdInput.value.trim();
   const date = dateInput.value;
   const time = timeInput.value;
-  if (!reqId || !date || !time) return alert("Please fill all fields.");
+  const endTime = endTimeInput?.value || "";
+  const technician = technicianInput?.value.trim() || "Unassigned";
+  const status = appointmentStatusSelect?.value || "";
+  if (!reqId || !date || !time || !status) return alert("Please fill all required fields.");
 
   try {
     const reqRef = doc(db, "requests", reqId);
+    const reqSnapshot = await getDoc(reqRef);
+    if (!reqSnapshot.exists()) {
+      return alert("Request not found. Verify the confirmation ID.");
+    }
+    const reqData = reqSnapshot.data();
+    if (reqData.uid && reqData.uid !== user.uid) {
+      return alert("You can only schedule appointments for your own requests.");
+    }
+
+    const appointmentRef = doc(db, "appointments", reqId);
+    const appointmentSnapshot = await getDoc(appointmentRef);
+    const appointmentPayload = {
+      requestId: reqId,
+      customerId: reqData.uid || user.uid,
+      scheduledDate: date,
+      scheduledStartTime: time,
+      scheduledEndTime: endTime || null,
+      technician,
+      status,
+      preferredWindow: reqData.preferredWindow || null,
+      updatedAt: serverTimestamp(),
+    };
+    if (!appointmentSnapshot.exists()) {
+      appointmentPayload.createdAt = serverTimestamp();
+    }
+
+    await setDoc(appointmentRef, appointmentPayload, { merge: true });
+
     await updateDoc(reqRef, {
+      status,
       appointmentDate: date,
       appointmentTime: time,
-      status: "Scheduled"
+      appointmentEndTime: endTime || null,
+      technicianAssigned: technician,
+      appointmentId: appointmentRef.id,
+      lastStatusChangeAt: serverTimestamp(),
+      statusHistory: arrayUnion({
+        status,
+        changedAt: new Date().toISOString(),
+      }),
     });
     alert("Appointment scheduled!");
     requestIdInput.value = "";
     dateInput.value = "";
     timeInput.value = "";
+    if (endTimeInput) {
+      endTimeInput.value = "";
+    }
+    if (technicianInput) {
+      technicianInput.value = "";
+    }
+    if (appointmentStatusSelect) {
+      appointmentStatusSelect.value = "Scheduled";
+    }
   } catch (e) {
     console.error(e);
     alert("Error scheduling appointment: " + e.message);

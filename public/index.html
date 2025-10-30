@@ -16,7 +16,10 @@
       <p>Please, create or login to your account to be able to send a Service Request.</p>
       <nav class="hero-nav">
         <a href="index.html" aria-current="page">Home</a>
-        <a href="invoices.html">Invoices (TODO)</a>
+        <a href="#account-card">Account</a>
+        <a href="#request-card">Requests</a>
+        <a href="#scheduleCard">Appointments</a>
+        <a href="invoices.html">Invoices (MVP)</a>
       </nav>
     </header>
 
@@ -99,12 +102,46 @@
       <section class="card" id="request-card">
         <h2>Request a Service</h2>
         <p class="hint">
-          Provide key details and submit once your account is ready.
+          Provide your scheduling preferences to receive the closest match to your preference.
         </p>
         <form id="serviceRequestForm">
           <label>
             Description
             <input type="text" id="description" placeholder="Describe your issue..." required>
+          </label>
+          <label>
+            Preferred Service Date
+            <input type="date" id="preferredDate" required>
+          </label>
+          <label>
+            Preferred Time
+            <input type="time" id="preferredTime" required>
+          </label>
+          <label>
+            Preferred Time Window
+            <select id="preferredWindow" required>
+              <option value="">Select a window</option>
+              <option value="morning">Morning (8am – 11am)</option>
+              <option value="midday">Midday (11am – 2pm)</option>
+              <option value="afternoon">Afternoon (2pm – 5pm)</option>
+              <option value="evening">Evening (5pm – 7pm)</option>
+              <option value="flexible">Flexible / First Available</option>
+            </select>
+          </label>
+          <label>
+            Service Source
+            <select id="serviceSource" required>
+              <option value="">How did you hear about us?</option>
+              <option value="google">Google Search</option>
+              <option value="referral">Referral</option>
+              <option value="repeat">Returning Customer</option>
+              <option value="ad">Online Ad</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+          <label>
+            Additional Notes
+            <textarea id="additionalNotes" rows="3" placeholder="Anything our technician should know?"></textarea>
           </label>
           <button id="btn-request" type="button">Submit Request</button>
         </form>
@@ -128,6 +165,24 @@
           <label>
             Appointment Time
             <input type="time" id="appointmentTime" required>
+          </label>
+          <label>
+            Appointment End Time (optional)
+            <input type="time" id="appointmentEndTime">
+          </label>
+          <label>
+            Technician / Assignee
+            <input type="text" id="technicianName" placeholder="Assign later or type technician name">
+          </label>
+          <label>
+            Appointment Status
+            <select id="appointmentStatus" required>
+              <option value="Pending">Pending</option>
+              <option value="Proposed">Proposed</option>
+              <option value="Scheduled" selected>Scheduled</option>
+              <option value="Completed">Completed</option>
+              <option value="Canceled">Canceled</option>
+            </select>
           </label>
           <button id="btn-schedule" type="button" disabled>Schedule</button>
         </form>

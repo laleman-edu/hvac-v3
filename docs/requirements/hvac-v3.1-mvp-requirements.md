@@ -19,10 +19,13 @@ Deliver a **minimum viable product** to manage service scheduling, invoicing, an
 
 #### a. Service Scheduling
 - Customer submits request (service type, preferred date/time, contact info).
-- Admin reviews and confirms appointment.
-- Notification sent automatically (email or WhatsApp).
-- Record stored with:
+- Admin reviews and proposes date/time for a service visit.
+- Notification of proposed date/time sent automatically (email or WhatsApp).
+- Record stored with initial status set to `Pending`:
   - Transaction ID, dates, service type, customer details, source (referral/Google).
+  - Customer scheduling preferences (specific date/time plus preferred time window) and submission notes.
+  - Status history entries stored for every transition (`Pending`, `Proposed`, `Scheduled`, etc.) with timestamps.
+- **Scheduling Definition:** every appointment must capture the service request ID, scheduled date, scheduled time block (start + optional end/padding), technician/assignee placeholder, and current status (`Pending`, `Scheduled`, `Completed`, or `Canceled`). Scheduling is completed when a confirmed date/time block is written to the `appointments` collection and linked to the originating request.
 
 #### b. Invoicing
 - Admin generates invoice with:
@@ -40,8 +43,9 @@ Deliver a **minimum viable product** to manage service scheduling, invoicing, an
 
 ### 2.3 Reporting (Phase 1)
 - Daily / weekly / monthly totals.
-- Unpaid vs paid invoices.
+- Unpaid vs partially paid vs fully paid invoices.
 - Tax summary.
+- Deposit summary.
 
 ---
 
@@ -81,6 +85,7 @@ Each includes timestamps and owner references (user UID).
 - Inventory module.
 - Advanced reporting (tax breakdown, income by service type).
 - WhatsApp API notifications.
+- Invoice create/edit/delete with export capabilities in pdf format
 
 ---
 
