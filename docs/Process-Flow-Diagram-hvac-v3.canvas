@@ -1,0 +1,41 @@
+{
+	"nodes":[
+		{"id":"edf75ed19c5699d5","type":"text","text":"Admin Propose Schedule","x":-640,"y":-1020,"width":244,"height":60,"color":"4"},
+		{"id":"8d178a03c648a872","type":"text","text":"Cust Sends Service Request","x":-645,"y":-1142,"width":249,"height":50,"color":"4"},
+		{"id":"34d20569287ce665","type":"text","text":"Select Service","x":-645,"y":-1230,"width":249,"height":50,"color":"4"},
+		{"id":"608819523aa05971","type":"text","text":"Customer Creates Account","x":-645,"y":-1320,"width":249,"height":50,"color":"4"},
+		{"id":"89cbc4c81e58a2ac","type":"text","text":"### Login to App","x":-670,"y":-1420,"width":300,"height":60,"color":"5"},
+		{"id":"245845774c748df0","type":"text","text":"Prepare Invoice","x":-597,"y":-770,"width":236,"height":50,"color":"4"},
+		{"id":"aab597a8c50e5875","type":"text","text":"Receive Payment","x":-597,"y":-690,"width":236,"height":50,"color":"4"},
+		{"id":"002c21b1073ab2b5","type":"text","text":"Prepare Receipt","x":-597,"y":-616,"width":236,"height":50,"color":"4"},
+		{"id":"18db88f5c533ff4e","type":"text","text":"### Complete/Cancel Service","x":-640,"y":-406,"width":320,"height":60,"color":"4"},
+		{"id":"43c79cbeb35a413f","type":"text","text":"Send Receipt via email","x":-598,"y":-526,"width":236,"height":50,"color":"4"},
+		{"id":"f2a68d602e47458b","type":"text","text":"Customer Confirm Schedule","x":-1068,"y":-820,"width":244,"height":50,"color":"4"},
+		{"id":"d2d95025ef1984e7","type":"text","text":"Admin Assigns Service","x":-1068,"y":-735,"width":244,"height":50,"color":"4"},
+		{"id":"ae00862a2b8a5fb4","type":"text","text":"Customer Change Request","x":-1009,"y":-1177,"width":126,"height":120,"color":"1"},
+		{"id":"53bb5e0a1693191b","type":"text","text":"Customer Cancels Request","x":-240,"y":-747,"width":140,"height":115,"color":"1"},
+		{"id":"01afa7eb163655d2","type":"text","text":"Provide Estimate","x":-1064,"y":-657,"width":236,"height":50,"color":"4"},
+		{"id":"a2e5d5f9666631d6","type":"text","text":"Customer Aproval","x":-1064,"y":-576,"width":236,"height":50,"color":"4"},
+		{"id":"a8808e733ebdbc78","type":"text","text":"Provide Service Requested","x":-1064,"y":-476,"width":236,"height":50,"color":"4"}
+	],
+	"edges":[
+		{"id":"ce3ae27b8eb43ceb","fromNode":"89cbc4c81e58a2ac","fromSide":"bottom","toNode":"608819523aa05971","toSide":"top"},
+		{"id":"58833a55cd67163e","fromNode":"608819523aa05971","fromSide":"bottom","toNode":"34d20569287ce665","toSide":"top"},
+		{"id":"1efc8be7ac5b7062","fromNode":"34d20569287ce665","fromSide":"bottom","toNode":"8d178a03c648a872","toSide":"top"},
+		{"id":"1e2fd4b6d6134f7d","fromNode":"8d178a03c648a872","fromSide":"bottom","toNode":"edf75ed19c5699d5","toSide":"top"},
+		{"id":"f755f9af90a4a575","fromNode":"edf75ed19c5699d5","fromSide":"right","toNode":"53bb5e0a1693191b","toSide":"top","color":"1","label":"cancellation"},
+		{"id":"d93bb79339112bf2","fromNode":"f2a68d602e47458b","fromSide":"bottom","toNode":"d2d95025ef1984e7","toSide":"top","color":"5"},
+		{"id":"5fec9ba515476f5a","fromNode":"d2d95025ef1984e7","fromSide":"bottom","toNode":"01afa7eb163655d2","toSide":"top","color":"5"},
+		{"id":"3992993f8dbd5323","fromNode":"01afa7eb163655d2","fromSide":"bottom","toNode":"a2e5d5f9666631d6","toSide":"top","color":"5"},
+		{"id":"f5ca9d929e511d9a","fromNode":"a2e5d5f9666631d6","fromSide":"bottom","toNode":"a8808e733ebdbc78","toSide":"top","color":"5"},
+		{"id":"bae50e12e7e16ec4","fromNode":"a8808e733ebdbc78","fromSide":"right","toNode":"245845774c748df0","toSide":"left","color":"5"},
+		{"id":"4123417a42f8c6e7","fromNode":"245845774c748df0","fromSide":"bottom","toNode":"aab597a8c50e5875","toSide":"top"},
+		{"id":"1afd0a0e445b6b01","fromNode":"aab597a8c50e5875","fromSide":"bottom","toNode":"002c21b1073ab2b5","toSide":"top"},
+		{"id":"5e0e97b7d636acc4","fromNode":"43c79cbeb35a413f","fromSide":"bottom","toNode":"18db88f5c533ff4e","toSide":"top"},
+		{"id":"815d7241d35dc2fb","fromNode":"53bb5e0a1693191b","fromSide":"bottom","toNode":"18db88f5c533ff4e","toSide":"right","color":"1"},
+		{"id":"8c7a43194700c1d3","fromNode":"ae00862a2b8a5fb4","fromSide":"right","toNode":"8d178a03c648a872","toSide":"left","color":"1","label":"new request"},
+		{"id":"f5a6f690a6f4da91","fromNode":"edf75ed19c5699d5","fromSide":"left","toNode":"ae00862a2b8a5fb4","toSide":"bottom","color":"1","label":"change"},
+		{"id":"9eb7ac64252dfe1b","fromNode":"002c21b1073ab2b5","fromSide":"bottom","toNode":"43c79cbeb35a413f","toSide":"top"},
+		{"id":"b30b32e3792909d0","fromNode":"edf75ed19c5699d5","fromSide":"bottom","toNode":"f2a68d602e47458b","toSide":"top","color":"5","label":"confirmation"}
+	]
+}
